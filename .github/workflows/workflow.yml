@@ -1,0 +1,27 @@
+name: Scheduled Python Script
+
+on:
+  schedule:
+    - cron: '0 0 * * MON,THU'  # 月曜と木曜の午前0時に実行
+    - cron: '0 0 * * TUE,FRI'  # 火曜と金曜の午前0時に実行
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # もし依存関係があれば
+
+      - name: Run Python script
+        run: python your_script.py
