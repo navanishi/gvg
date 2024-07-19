@@ -1,7 +1,17 @@
 import pandas as pd
+import requests
+
+# GitHubのExcelファイルのURL
+url = 'https://github.com/navanishi/gvg/raw/main/gvg.xlsx'
+local_filename = 'gvg.xlsx'
+
+# GitHubからExcelファイルをダウンロード
+response = requests.get(url)
+with open(local_filename, 'wb') as file:
+    file.write(response.content)
 
 # Excelファイルのパス
-file_path = 'C:/BOT/togvg.xlsx'
+file_path = local_filename
 
 # 出席メンバーのシート
 atend_sheet = 'atend'
@@ -28,7 +38,7 @@ party_df['A'] = ['party' + str(i + 1) for i in range(party_count)]
 
 # 配置するメンバーの管理
 assigned_leaders = set()
-assigned_members = set()
+assigned_members = set()	
 
 # カテゴリ6かつリーダー（L）のメンバーを抽出
 leaders_6 = memlist_df[(memlist_df.iloc[:, 3] == 6) & (memlist_df.iloc[:, 5] == 'L')].iloc[:, 0].tolist()
