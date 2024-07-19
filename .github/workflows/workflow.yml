@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '0 0 * * MON,THU'  # 月曜と木曜の午前0時に実行
     - cron: '0 0 * * TUE,FRI'  # 火曜と金曜の午前0時に実行
+    - cron: '05 15 * * FRI'  # 火曜と金曜の午前0時に実行
 
 jobs:
   run-script:
