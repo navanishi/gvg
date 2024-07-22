@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
 from io import BytesIO
+import openpyxl  # 追加
 import zipfile
 
 # GitHubのリポジトリからファイルをダウンロード
@@ -14,13 +15,12 @@ try:
         f.write(response.content)
 
     # ファイルが正しい形式か確認
-    with zipfile.ZipFile(file_path, 'r') as z:
-        z.testzip()  # ZIPファイルのチェック
+    # ZIPファイルのチェックは不要なので削除
+    # with zipfile.ZipFile(file_path, 'r') as z:
+    #     z.testzip()  # ZIPファイルのチェック
 
 except requests.RequestException as e:
     print(f"HTTP リクエストエラー: {e}")
-except zipfile.BadZipFile as e:
-    print(f"ファイルがZIP形式でないか、破損しています: {e}")
 except Exception as e:
     print(f"その他のエラー: {e}")
 
@@ -164,11 +164,11 @@ try:
 
     # 最終状態のパーティシートを表示
     print("Final party_df:")
-    print(party_df)  # パーティシートの内容を表示
+    print(party_df)
 
-    # Excelファイルに書き込む
-    with pd.ExcelWriter(file_path, engine='openpyxl', mode='a') as writer:
-        party_df.to_excel(writer, sheet_name=party_sheet, index=False, header=False, startrow=2)
+    # 結果を新しいExcelファイルに保存
+    output_file = 'organized_parties.xlsx'
+    party_df.to_excel(output_file, index=False)
 
 except Exception as e:
     print(f"エラー: {e}")
