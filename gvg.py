@@ -1,8 +1,6 @@
 import pandas as pd
 import requests
 from io import BytesIO
-import openpyxl  # 追加
-import zipfile
 
 # GitHubのリポジトリからファイルをダウンロード
 url = 'https://github.com/navanishi/gvg/raw/main/togvg.xlsx'
@@ -14,25 +12,11 @@ try:
     with open(file_path, 'wb') as f:
         f.write(response.content)
 
-    # ファイルが正しい形式か確認
-    # ZIPファイルのチェックは不要なので削除
-    # with zipfile.ZipFile(file_path, 'r') as z:
-    #     z.testzip()  # ZIPファイルのチェック
+    # データを読み込む
+    atend_sheet = 'atend'
+    memlist_sheet = 'memlist'
+    party_sheet = 'party'
 
-except requests.RequestException as e:
-    print(f"HTTP リクエストエラー: {e}")
-except Exception as e:
-    print(f"その他のエラー: {e}")
-
-# 出席メンバーのシート
-atend_sheet = 'atend'
-# メンバーリストのシート
-memlist_sheet = 'memlist'
-# 結果のパーティシート
-party_sheet = 'party'
-
-# データを読み込む
-try:
     atend_df = pd.read_excel(file_path, sheet_name=atend_sheet, header=None, engine='openpyxl')
     memlist_df = pd.read_excel(file_path, sheet_name=memlist_sheet, engine='openpyxl')
 
@@ -44,8 +28,6 @@ try:
 
     # パーティシートの初期化
     party_df = pd.DataFrame(columns=['A', 'B', 'C', 'D', 'E', 'F', 'G'])
-
-    # パーティ番号を設定
     party_df['A'] = ['party' + str(i + 1) for i in range(party_count)]
 
     # 配置するメンバーの管理
@@ -166,9 +148,9 @@ try:
     print("Final party_df:")
     print(party_df)
 
-    # 結果を新しいExcelファイルに保存
-    output_file = 'organized_parties.xlsx'
-    party_df.to_excel(output_file, index=False)
+    # 結果をExcelファイルに保存
+    with pd.ExcelWriter(file_path, mode='a', if_sheet_exists='replace', engine='openpyxl') as writer:
+        party_df.to_excel(writer, sheet_name=party_sheet, index=False)
 
 except Exception as e:
-    print(f"エラー: {e}")
+    print(f"Excel 読み込みエラー: {e}")
