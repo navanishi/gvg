@@ -1,6 +1,5 @@
 import pandas as pd
 import requests
-from io import BytesIO
 
 # GitHubのリポジトリからファイルをダウンロード
 url = 'https://github.com/navanishi/gvg/raw/main/togvg.xlsx'
